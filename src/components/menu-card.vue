@@ -7,12 +7,16 @@
 			:style="{ 'margin-left': marginLeft + 'px' }"
 		>
 			<el-card :body-style="{ padding: '0px' }">
-				<router-link to="">
-					<img src="" class="image" style="width: 232px; height: 232px" />
+				<router-link :to="{ name: 'detail', query: { menuId: item._id } }">
+					<img
+						:src="item.product_pic_url"
+						class="image"
+						style="width: 232px; height: 232px"
+					/>
 					<div style="padding: 14px" class="menu-card-detail">
-						<strong>菜品名称</strong>
-						<span>0 评论</span>
-						<router-link to="" tag="em"> 作者 </router-link>
+						<strong>{{ item.title }}</strong>
+						<span>{{ item.comments_len }} 评论</span>
+						<router-link :to="{name: 'space', query: {userId: item.userId}}" tag="em">{{ item.name }}</router-link>
 					</div>
 				</router-link>
 			</el-card>
@@ -30,7 +34,7 @@
 			},
 			info: {
 				type: Array,
-				default: [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }],
+				default: [],
 			},
 		},
 	};
