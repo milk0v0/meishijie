@@ -1,22 +1,19 @@
 <template>
-	<el-row class="menu-card">
+	<el-row class="menu-card" type="flex" justify="start">
 		<el-col
-			v-for="item in info"
-			:key="item._id"
-			style="flex: none"
-			:style="{ 'margin-left': marginLeft + 'px' }"
+			v-for="item in 5"
+			:key="item"
+			:style="{
+				'margin-left': marginLeft + 'px',
+			}"
 		>
 			<el-card :body-style="{ padding: '0px' }">
-				<router-link :to="{ name: 'detail', query: { menuId: item._id } }">
-					<img
-						:src="item.product_pic_url"
-						class="image"
-						style="width: 232px; height: 232px"
-					/>
-					<div style="padding: 14px" class="menu-card-detail">
-						<strong>{{ item.title }}</strong>
-						<span>{{ item.comments_len }} 评论</span>
-						<router-link :to="{name: 'space', query: {userId: item.userId}}" tag="em">{{ item.name }}</router-link>
+				<router-link to="">
+					<img class="image" />
+					<div class="menu-card-detail">
+						<strong>菜品名称</strong>
+						<span>0 评论</span>
+						<router-link to="" tag="em"> 作者 </router-link>
 					</div>
 				</router-link>
 			</el-card>
@@ -26,23 +23,24 @@
 
 <script>
 	export default {
-		name: "menu-card",
+		name: "MenuCard",
 		props: {
 			marginLeft: {
 				type: Number,
-				default: 22,
-			},
-			info: {
-				type: Array,
-				default: [],
+				default: 12,
 			},
 		},
 	};
 </script>
 
-<style lang="stylus">
+<style lang="scss" scoped>
 	.menu-card {
 		flex-wrap: wrap;
+
+		.image {
+			width: 232px;
+			height: 232px;
+		}
 
 		.el-col-24 {
 			width: auto;
@@ -51,6 +49,8 @@
 		}
 
 		.menu-card-detail {
+			padding: 14px;
+
 			> * {
 				display: block;
 			}

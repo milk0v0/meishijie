@@ -1,7 +1,7 @@
 <template>
 	<div id="app">
 		<el-container>
-			<Header></Header>
+      <Header></Header>
 			<el-main>
 				<div class="main">
 					<router-view></router-view>
@@ -13,6 +13,7 @@
 		</el-container>
 	</div>
 </template>
+
 <script>
 	import Header from "@/components/header";
 	export default {
@@ -20,17 +21,15 @@
 	};
 </script>
 
-<style lang="stylus">
+<style lang="scss">
 	body {
 		background: #fae8c8;
 		font-size: 12px;
 	}
-
 	.main {
 		width: 990px;
 		margin: 0 auto;
 	}
-
 	.footer {
 		text-align: center;
 		height: 42px;

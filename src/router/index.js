@@ -1,34 +1,16 @@
+import Home from '@/views/home/home.vue'
 import Vue from 'vue'
-import Router from 'vue-router'
-Vue.use(Router)
+import VueRouter from 'vue-router'
 
-import Home from '@/views/home/Home.vue';
+Vue.use(VueRouter)
 
-const Detail = () => import('@/views/detail/detail');
-
-const Space = () => import( /* webpackChunkName: "space" */ '@/views/user-space/space');
-
-const viewsRoute = [{
-    path: '/detail',
-    name: 'detail',
-    title: '菜谱细节',
-    component: Detail
-}, {
-    path: '/space',
-    title: '个人空间',
-    name: 'space',
-    component: Space,
-}]
-
-const router = new Router({
-    mode: 'history',
-    routes: [{
-        path: '/',
-        name: 'home',
-        title: '首页',
-        component: Home,
-    },
-    ...viewsRoute]
+const router = new VueRouter({
+  mode: 'history',
+  routes: [{
+    path: '/',
+    name: 'Home',
+    component: Home
+  }]
 })
 
-export default router;
+export default router

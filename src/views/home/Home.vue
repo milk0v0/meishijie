@@ -1,63 +1,34 @@
 <template>
 	<div class="home">
 		<el-carousel :interval="5000" type="card" height="300px">
-			<el-carousel-item v-for="item in banners" :key="item._id">
-				<router-link :to="{ name: 'detail', query: { menuId: item._id } }">
-					<img :src="item.product_pic_url" width="100%" />
+			<el-carousel-item v-for="item in 6" :key="item">
+				<router-link to="">
+					<img src="" width="100%" alt="" />
 				</router-link>
 			</el-carousel-item>
 		</el-carousel>
 		<div>
 			<h2>内容精选</h2>
-			<waterfall ref="waterfall" @view="handleLoadingMenu">
-				<menu-card :margin-left="13" :info="menuList"></menu-card>
-			</waterfall>
+			<Waterfall>
+				<MenuCard :margin-left="13" />
+			</Waterfall>
 		</div>
 	</div>
 </template>
 
 <script>
-	import Waterfall from "@/components/waterfall.vue";
 	import MenuCard from "@/components/menu-card.vue";
-	import { getBanner, getMenus } from "@/service/api";
+	import Waterfall from "@/components/waterfall.vue";
 	export default {
 		name: "home",
 		components: {
-			MenuCard,
 			Waterfall,
-		},
-		data() {
-			return {
-				banners: [],
-				menuList: [],
-				page: 1,
-				maxPage: 0,
-			};
-		},
-		methods: {
-			async handleLoadingMenu() {
-				this.page++;
-				if (this.page > this.maxPage) {
-					return (this.$refs.waterfall.isLoading = false);
-				}
-				const resMenus = await getMenus({ page: this.page });
-				this.menuList.push(...resMenus.data.list);
-				this.$refs.waterfall.isLoading = false;
-			},
-		},
-		async mounted() {
-			const resBanner = await getBanner();
-			this.banners = resBanner.data.list;
-
-			const resMenus = await getMenus({ page: this.page });
-			this.maxPage = Math.ceil(resMenus.data.total / resMenus.data.page_size);
-			this.menuList.push(...resMenus.data.list);
-			this.$refs.waterfall.isLoading = false;
+			MenuCard,
 		},
 	};
 </script>
 
-<style lang="stylus">
+<style lang="scss" scoped>
 	.home {
 		h2 {
 			text-align: center;
@@ -76,7 +47,7 @@
 			background-color: #99a9bf;
 		}
 
-		.el-carousel__item:nth-child(2n+1) {
+		.el-carousel__item:nth-child(2n + 1) {
 			background-color: #d3dce6;
 		}
 	}
