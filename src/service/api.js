@@ -46,3 +46,21 @@ const http = new HttpRequest({
 export async function getBanner(){
   return await http.get('/banner');
 }
+
+/**
+ * 拿到用户发布的菜谱，可做筛使用选
+ * @export
+ * @param {Object} [params] - 不填写，则获取所有的菜谱
+ * @param {string} [params.userId] - 指定用户的菜单
+ * @param {string} [params.classify] - 按照菜单分类，进行筛选
+ * @param {string} [params.property] - 指定菜单属性进行筛选
+ * @param {string} [params.property.craft] - 按工艺筛选
+ * @param {string} [params.property.flavor] - 按口味筛选
+ * @param {string} [params.property.hard] - 按难度筛选
+ * @param {string} [params.property.people] - 按人数筛选
+ * @param {string} [params.page] - 指定页码
+ * @returns
+ */
+ export async function getMenus(params){
+  return await http.get('/menu/query', {params});
+}
