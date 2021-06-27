@@ -2,15 +2,15 @@
 	<div class="home">
 		<el-carousel :interval="5000" type="card" height="300px">
 			<el-carousel-item v-for="item in banners" :key="item._id">
-				<router-link to="">
+				<router-link :to="{ name: 'detail', query: { menuId: item.menuId } }">
 					<img :src="item.product_pic_url" width="100%" />
 				</router-link>
 			</el-carousel-item>
 		</el-carousel>
 		<div>
 			<h2>内容精选</h2>
-			<Waterfall>
-				<MenuCard :margin-left="13" />
+			<Waterfall @arrive="handleArrive">
+				<MenuCard :margin-left="13" :info="info" />
 			</Waterfall>
 		</div>
 	</div>
@@ -19,7 +19,7 @@
 <script>
 	import MenuCard from "@/components/menu-card";
 	import Waterfall from "@/components/waterfall";
-	import { getBanner } from "@/service/api";
+	import { getBanner, getMenus } from "@/service/api";
 	export default {
 		name: "home",
 		components: {
@@ -29,7 +29,23 @@
 		data() {
 			return {
 				banners: [],
+				info: [],
+				page: 1,
 			};
+		},
+		methods: {
+			handleArrive(cb) {
+				getMenus({ page: this.page }).then((data) => {
+					const { list, total, page_size } = data.data;
+					this.info.push(...list);
+					if (total <= page_size * this.page) {
+						cb && cb("到底了");
+					} else {
+						cb && cb();
+					}
+					this.page++;
+				});
+			},
 		},
 		mounted() {
 			getBanner().then((data) => {

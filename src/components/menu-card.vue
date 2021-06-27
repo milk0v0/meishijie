@@ -1,20 +1,24 @@
 <template>
 	<el-row class="menu-card" type="flex" justify="start">
 		<el-col
-			v-for="item in 5"
-			:key="item"
+			v-for="item in info"
+			:key="item._id"
 			:style="{
 				'margin-left': marginLeft + 'px',
 			}"
 		>
 			<el-card :body-style="{ padding: '0px' }">
-				<router-link to="">
-					<img class="image" />
+				<router-link :to="{ name: 'detail', query: { menuId: item.menuId } }">
+					<img :src="item.product_pic_url" class="image" />
 					<div class="menu-card-detail">
-						<strong>菜品名称</strong>
-						<span>0 评论</span>
-						<router-link to="" custom v-slot="{ navigate }">
-							<em @click="navigate"> 作者 </em>
+						<strong>{{ item.title }}</strong>
+						<span>{{ item.comments_len }} 评论</span>
+						<router-link
+							:to="{ name: 'space', query: { userId: item.userId } }"
+							custom
+							v-slot="{ navigate }"
+						>
+							<em @click="navigate"> {{ item.name }} </em>
 						</router-link>
 					</div>
 				</router-link>
@@ -29,7 +33,11 @@
 		props: {
 			marginLeft: {
 				type: Number,
-				default: 12,
+				default: 0,
+			},
+			info: {
+				type: Array,
+				default: () => [],
 			},
 		},
 	};
