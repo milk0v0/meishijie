@@ -21,8 +21,12 @@
 						<a href="javascript:;" class="collection">退出</a>
 					</el-col> -->
 					<el-col :span="6" :offset="3" class="avatar-box">
-						<router-link to="" class="user-name">登录</router-link>
-						<router-link to="" class="collection">注册</router-link>
+						<router-link :to="{ name: 'login' }" class="user-name"
+							>登录</router-link
+						>
+						<router-link :to="{ name: 'login' }" class="collection"
+							>注册</router-link
+						>
 					</el-col>
 				</el-row>
 			</div>

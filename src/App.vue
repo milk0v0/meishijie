@@ -1,7 +1,7 @@
 <template>
 	<div id="app">
 		<el-container>
-      <Header></Header>
+			<Header></Header>
 			<el-main>
 				<div class="main">
 					<router-view></router-view>

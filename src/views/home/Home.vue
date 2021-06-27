@@ -1,9 +1,9 @@
 <template>
 	<div class="home">
 		<el-carousel :interval="5000" type="card" height="300px">
-			<el-carousel-item v-for="item in 6" :key="item">
+			<el-carousel-item v-for="item in banners" :key="item._id">
 				<router-link to="">
-					<img src="" width="100%" alt="" />
+					<img :src="item.product_pic_url" width="100%" />
 				</router-link>
 			</el-carousel-item>
 		</el-carousel>
@@ -17,13 +17,24 @@
 </template>
 
 <script>
-	import MenuCard from "@/components/menu-card.vue";
-	import Waterfall from "@/components/waterfall.vue";
+	import MenuCard from "@/components/menu-card";
+	import Waterfall from "@/components/waterfall";
+	import { getBanner } from "@/service/api";
 	export default {
 		name: "home",
 		components: {
 			Waterfall,
 			MenuCard,
+		},
+		data() {
+			return {
+				banners: [],
+			};
+		},
+		mounted() {
+			getBanner().then((data) => {
+				this.banners = data.data.list;
+			});
 		},
 	};
 </script>

@@ -13,7 +13,9 @@
 					<div class="menu-card-detail">
 						<strong>菜品名称</strong>
 						<span>0 评论</span>
-						<router-link to="" tag="em"> 作者 </router-link>
+						<router-link to="" custom v-slot="{ navigate }">
+							<em @click="navigate"> 作者 </em>
+						</router-link>
 					</div>
 				</router-link>
 			</el-card>

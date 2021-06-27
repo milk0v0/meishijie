@@ -9,7 +9,7 @@
 			<router-link class="nav-link" :to="{ name: 'home' }">首页</router-link>
 		</el-menu-item>
 		<el-menu-item index="2">
-			<router-link class="nav-link" :to="{ name: 'recipe' }"
+			<router-link class="nav-link" to=""
 				>菜谱大全</router-link
 			>
 		</el-menu-item>

@@ -41,3 +41,8 @@ class HttpRequest {
 const http = new HttpRequest({
   baseURL: '/api'
 }).request();
+
+// 获取banner数据
+export async function getBanner(){
+  return await http.get('/banner');
+}

@@ -16,4 +16,7 @@
     min-width: 56px;
     text-align: center;
   }
+  .el-collapse-item:nth-last-of-type(1) .el-collapse-item__header {
+    border: none
+  }
 }
