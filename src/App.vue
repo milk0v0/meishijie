@@ -15,9 +15,17 @@
 </template>
 
 <script>
+	import { userInfo } from "@/service/api";
 	import Header from "@/components/header";
 	export default {
 		components: { Header },
+		created() {
+			if (localStorage.getItem("token")) {
+				userInfo().then((res) => {
+					console.log(res);
+				});
+			}
+		},
 	};
 </script>
 

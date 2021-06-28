@@ -1,3 +1,4 @@
+import { userInfo } from '@/service/api';
 import Home from '@/views/home/home';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
@@ -33,7 +34,7 @@ const viewsRoute = [{
   meta: {
     login: true
   }
-}{
+}, {
   path: '/edit',
   title: '编辑个人资料',
   name: 'edit',
@@ -109,6 +110,35 @@ const router = new VueRouter({
       name: 'home'
     }
   }]
+})
+
+
+router.beforeEach(async (to, from, next) => {
+  const token = localStorage.getItem('token');
+  if (to.matched.some(item => item.meta.login)) {
+    if (token) {
+      const res = await userInfo();
+      if (res.error === 400) {
+        localStorage.removeItem('token');
+        next({ name: 'login' });
+        return
+      }
+
+      if (to.name === 'login') {
+        next({ name: 'home' });
+      } else {
+        next();
+      }
+    } else {
+      if (to.name === 'login') {
+        next();
+      } else {
+        next({ name: 'login' });
+      }
+    }
+  } else {
+    next();
+  }
 })
 
 export default router

@@ -64,3 +64,26 @@ export async function getBanner(){
  export async function getMenus(params){
   return await http.get('/menu/query', {params});
 }
+
+/**
+ * @export
+ * @param {Object} params - 
+ * @param {string} params.name - 用户名
+ * @param {string} params.password - 密码
+ * @returns
+ */
+
+export async function login(params){
+  return await http.post('/user/login', params);
+}
+
+/**
+ * 获取用户信息
+ * @export
+ * @param {Object} params - 
+ * @param {string} [params.userId] - 用户id
+ * @returns
+ */
+ export async function userInfo(params){
+  return await http.post('/user/info', params);
+}

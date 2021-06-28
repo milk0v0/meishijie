@@ -1,23 +1,62 @@
 <template>
 	<div class="login-section">
-		<el-form label-position="top" label-width="100px" class="demo-ruleForm">
+		<el-form
+			:rules="rules"
+			label-position="top"
+			label-width="100px"
+			class="demo-ruleForm"
+			ref="ruleForm"
+			:model="ruleForm"
+			:status-icon="true"
+		>
 			<el-form-item label="用户名" prop="name">
-				<el-input type="text"></el-input>
+				<el-input v-model="ruleForm.name" type="text"></el-input>
 			</el-form-item>
 			<el-form-item label="密码" prop="password">
-				<el-input type="password"></el-input>
+				<el-input v-model="ruleForm.password" type="password"></el-input>
 			</el-form-item>
-      <el-form-item>
-        <el-button type="primary">提交</el-button>
-        <el-button>重置</el-button>
-      </el-form-item>
+			<el-form-item>
+				<el-button type="primary" @click="submitForm('ruleForm')"
+					>提交</el-button
+				>
+				<el-button>重置</el-button>
+			</el-form-item>
 		</el-form>
 	</div>
 </template>
 
 <script>
+	import { login } from "@/service/api";
 	export default {
 		name: "loginSection",
+		data() {
+			return {
+				ruleForm: {
+					name: "",
+					password: "",
+				},
+				rules: {
+					name: { required: true, message: "请输入用户名", trigger: "blur" },
+					password: { required: true, message: "请输入密码", trigger: "blur" },
+				},
+			};
+		},
+		methods: {
+			submitForm(formName) {
+				this.$refs[formName].validate((valid) => {
+					if (valid) {
+						login(this.ruleForm).then((res) => {
+							if (!res.code) {
+								localStorage.setItem("token", res.data.token);
+								this.$router.replace({ name: 'home' });
+							} else {
+								this.$message.error(res.mes);
+							}
+						});
+					}
+				});
+			},
+		},
 	};
 </script>
 
