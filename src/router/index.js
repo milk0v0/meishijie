@@ -7,6 +7,7 @@ const Recipe = () => import('@/views/recipe/recipe');
 const Login = () => import('@/views/user-login/index');
 const Detail = () => import('@/views/detail/detail');
 const Create = () => import('@/views/create/create');
+const Edit = () => import('@/views/user-space/edit');
 
 const Space = () => import( /* webpackChunkName: "space" */ '@/views/user-space/space');
 const MenuList = () => import( /* webpackChunkName: "space" */ '@/views/user-space/menu-list');
@@ -32,6 +33,14 @@ const viewsRoute = [{
   meta: {
     login: true
   }
+}{
+  path: '/edit',
+  title: '编辑个人资料',
+  name: 'edit',
+  meta: {
+    login: true
+  },
+  component: Edit
 }, {
   path: '/space',
   title: '个人空间',
@@ -89,11 +98,16 @@ const router = new VueRouter({
     name: 'login',
     title: '登录页',
     component: Login,
+    meta: {
+      login: true
+    },
   }, ...viewsRoute, {
     path: '*',
     name: 'noFound',
     title: '未找到',
-    component: Home,
+    redirect: {
+      name: 'home'
+    }
   }]
 })
 
