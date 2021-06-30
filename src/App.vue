@@ -15,14 +15,23 @@
 </template>
 
 <script>
+	import { mapMutations } from "vuex";
 	import { userInfo } from "@/service/api";
 	import Header from "@/components/header";
 	export default {
 		components: { Header },
+		methods: {
+			...mapMutations(["changeUserInfo"]),
+		},
 		created() {
 			if (localStorage.getItem("token")) {
 				userInfo().then((res) => {
-					console.log(res);
+					if (res.error === 400) {
+						localStorage.removeItem("token");
+						this.changeUserInfo({});
+					} else {
+						this.changeUserInfo(res.data);
+					}
 				});
 			}
 		},

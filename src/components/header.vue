@@ -7,20 +7,22 @@
 						<a href="" class="logo"></a>
 					</el-col>
 					<el-col :span="10" :offset="2"></el-col>
-					<!-- <el-col :span="6" :offset="3" class="avatar-box">
+					<el-col :span="6" :offset="3" class="avatar-box" v-if="isLogin">
 						<router-link to="">
 							<el-avatar
 								style="vertical-align: middle"
 								shape="square"
 								size="medium"
-								src=""
+								:src="userInfo.avatar"
 							></el-avatar>
 						</router-link>
-						<router-link to="" class="user-name"></router-link>
+						<router-link to="" class="user-name">{{
+							userInfo.name
+						}}</router-link>
 						<router-link to="" class="collection">发布菜谱</router-link>
 						<a href="javascript:;" class="collection">退出</a>
-					</el-col> -->
-					<el-col :span="6" :offset="3" class="avatar-box">
+					</el-col>
+					<el-col :span="6" :offset="3" class="avatar-box" v-else>
 						<router-link :to="{ name: 'login' }" class="user-name"
 							>登录</router-link
 						>
@@ -40,10 +42,15 @@
 </template>
 
 <script>
+	import { mapState, mapGetters } from "vuex";
 	import Menus from "@/components/menus";
 	export default {
 		name: "headers",
 		components: { Menus },
+		computed: {
+			...mapState(["userInfo"]),
+			...mapGetters(["isLogin"]),
+		},
 	};
 </script>
 

@@ -26,7 +26,8 @@
 </template>
 
 <script>
-	import { login } from "@/service/api";
+	import { mapMutations } from "vuex";
+	import { login, userInfo } from "@/service/api";
 	export default {
 		name: "loginSection",
 		data() {
@@ -42,15 +43,25 @@
 			};
 		},
 		methods: {
+			...mapMutations(["changeUserInfo"]),
 			submitForm(formName) {
 				this.$refs[formName].validate((valid) => {
 					if (valid) {
-						login(this.ruleForm).then((res) => {
-							if (!res.code) {
-								localStorage.setItem("token", res.data.token);
-								this.$router.replace({ name: 'home' });
+						login(this.ruleForm).then((res1) => {
+							if (res1.code === 400) {
+								this.$message.error(res1.mes);
 							} else {
-								this.$message.error(res.mes);
+								localStorage.setItem("token", res1.data.token);
+								userInfo().then((res2) => {
+									if (res2.error === 400) {
+										localStorage.removeItem("token");
+										this.changeUserInfo({});
+										this.$message.error(res2.mes);
+									} else {
+										this.changeUserInfo(res2.data);
+										this.$router.replace({ name: "home" });
+									}
+								});
 							}
 						});
 					}

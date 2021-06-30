@@ -1,4 +1,5 @@
 import { userInfo } from '@/service/api';
+import store from '@/store';
 import Home from '@/views/home/home';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
@@ -120,8 +121,11 @@ router.beforeEach(async (to, from, next) => {
       const res = await userInfo();
       if (res.error === 400) {
         localStorage.removeItem('token');
+        store.commit('changeUserInfo', {});
         next({ name: 'login' });
         return
+      } else {
+        store.commit('changeUserInfo', res.data);
       }
 
       if (to.name === 'login') {
