@@ -20,7 +20,7 @@
 							userInfo.name
 						}}</router-link>
 						<router-link to="" class="collection">发布菜谱</router-link>
-						<a href="javascript:;" class="collection">退出</a>
+						<a href="javascript:;" class="collection" @click="loginOut">退出</a>
 					</el-col>
 					<el-col :span="6" :offset="3" class="avatar-box" v-else>
 						<router-link :to="{ name: 'login' }" class="user-name"
@@ -42,14 +42,46 @@
 </template>
 
 <script>
-	import { mapState, mapGetters } from "vuex";
+	import { mapState, mapGetters, mapMutations } from "vuex";
 	import Menus from "@/components/menus";
+	import { login_out } from "@/service/api";
 	export default {
 		name: "headers",
 		components: { Menus },
 		computed: {
 			...mapState(["userInfo"]),
 			...mapGetters(["isLogin"]),
+		},
+		methods: {
+			...mapMutations(["changeUserInfo"]),
+			loginOut() {
+				this.$confirm("您确定要退出吗？", "提示", {
+					confirmButtonText: "确定",
+					cancelButtonText: "取消",
+					type: "warning",
+				})
+					.then(async () => {
+						const res = await login_out();
+						if (res.code === 0) {
+							localStorage.removeItem("token");
+							this.changeUserInfo({});
+
+							this.$route.name !== "home" &&
+								this.$router.replace({ name: "home" });
+
+							this.$message({
+								type: "success",
+								message: res.mes,
+							});
+						} else {
+							this.$message({
+								type: "warning",
+								message: res.mes,
+							});
+						}
+					})
+					.catch(() => {});
+			},
 		},
 	};
 </script>
