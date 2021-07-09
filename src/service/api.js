@@ -94,3 +94,15 @@ export async function login(params){
 export async function login_out(){
   return await http.post('/user/login_out');
 }
+
+/**
+ * 注册账号
+ * @export
+ * @param {Object} params - 
+ * @param {Object} params.name - 用户名
+ * @param {Object} params.password - 密码
+ * @returns
+ */
+export async function register(params){
+  return await http.post('/user/create', params);
+}

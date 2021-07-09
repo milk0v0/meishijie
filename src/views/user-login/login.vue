@@ -19,7 +19,7 @@
 				<el-button type="primary" @click="submitForm('ruleForm')"
 					>提交</el-button
 				>
-				<el-button>重置</el-button>
+				<el-button @click="resetForm('ruleForm')">重置</el-button>
 			</el-form-item>
 		</el-form>
 	</div>
@@ -67,6 +67,9 @@
 					}
 				});
 			},
+			resetForm(formName) {
+        this.$refs[formName].resetFields();
+      },
 		},
 	};
 </script>
