@@ -65,8 +65,23 @@
 </template>
 
 <script>
+	import { mapState } from "vuex";
 	export default {
 		name: "space",
+		computed: {
+			...mapState(["userInfo"]),
+		},
+		mounted () {
+			// console.log(this.$route);
+		},
+		watch: {
+			$route() {
+				const { userId } = this.$route.query;
+				if (!userId || userId === this.userInfo.userId) {
+					console.log(111);
+				}
+			},
+		},
 	};
 </script>
 
