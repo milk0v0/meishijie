@@ -63,13 +63,42 @@
 			<!-- <menu-card :margin-left="13"></menu-card> -->
 			<!-- 粉丝 & 关注 布局 -->
 			<!-- <Fans></Fans> -->
-			<router-view></router-view>
+			<router-view
+				:info="otherInfo[activeName]"
+				:activeName="activeName"
+			></router-view>
 		</div>
 	</div>
 </template>
 
 <script>
-	import { userInfo, toggleFollowing } from "@/service/api";
+	import {
+		userInfo,
+		toggleFollowing,
+		getMenus,
+		following,
+		fans,
+		collection,
+	} from "@/service/api";
+
+	const getOtherInfo = {
+		async works(params) {
+			// 作品
+			return (await getMenus(params)).data;
+		},
+		async following(params) {
+			// 关注
+			return (await following(params)).data;
+		},
+		async fans(params) {
+			// 粉丝
+			return (await fans(params)).data;
+		},
+		async collection(params) {
+			// 收藏
+			return (await collection(params)).data;
+		},
+	};
 	export default {
 		name: "space",
 		data() {
@@ -77,28 +106,47 @@
 				userInfo: {},
 				isOwner: false,
 				activeName: "works",
+				otherInfo: {},
 			};
 		},
-		mounted() {
-			this.handleRoute();
-			this.activeName = this.$route.name;
-		},
 		watch: {
-			$route() {
-				this.handleRoute();
+			$route: {
+				async handler() {
+					const { userId } = this.$route.query;
+
+					this.userInfo.userId !== userId && (this.otherInfo = {});
+
+					this.activeName = this.$route.name;
+
+					if (!userId || userId === this.$store.state.userInfo.userId) {
+						await new Promise((res) => {
+							setTimeout(() => res());
+						});
+						this.userInfo = this.$store.state.userInfo;
+						this.isOwner = true;
+					} else if (this.userInfo.userId !== userId) {
+						const { data } = await userInfo({ userId });
+						this.userInfo = data;
+					}
+
+					this.getInfo();
+				},
+				immediate: true,
 			},
 		},
 		methods: {
-			async handleRoute() {
-				const { userId } = this.$route.query;
-				if (!userId || userId === this.$store.state.userInfo.userId) {
-					this.userInfo = this.$store.state.userInfo;
-					this.isOwner = true;
-				} else {
-					const { data } = await userInfo({ userId });
-					this.userInfo = data;
+			getInfo() {
+				if (!this.otherInfo[this.activeName]) {
+					this.$set(this.otherInfo, this.activeName, []);
+
+					(async (activeName) => {
+						const { list } = await getOtherInfo[activeName]({
+							userId: this.userInfo.userId,
+						});
+
+						this.$set(this.otherInfo, activeName, list);
+					})(this.activeName);
 				}
-				console.log(this.userInfo);
 			},
 			async handleToggle() {
 				const { code, data, mes } = await toggleFollowing({
@@ -113,7 +161,8 @@
 				});
 			},
 			handleTab() {
-				this.$router.push({ name: this.activeName, query: this.$route.query });
+				this.$route.name !== this.activeName &&
+					this.$router.push({ name: this.activeName, query: this.$route.query });
 			},
 		},
 	};

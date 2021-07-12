@@ -43,7 +43,7 @@ const http = new HttpRequest({
 }).request();
 
 // 获取banner数据
-export async function getBanner(){
+export async function getBanner() {
   return await http.get('/banner');
 }
 
@@ -61,8 +61,8 @@ export async function getBanner(){
  * @param {string} [params.page] - 指定页码
  * @returns
  */
- export async function getMenus(params){
-  return await http.get('/menu/query', {params});
+export async function getMenus(params) {
+  return await http.get('/menu/query', { params });
 }
 
 /**
@@ -73,7 +73,7 @@ export async function getBanner(){
  * @returns
  */
 
-export async function login(params){
+export async function login(params) {
   return await http.post('/user/login', params);
 }
 
@@ -84,14 +84,14 @@ export async function login(params){
  * @param {string} [params.userId] - 用户id
  * @returns
  */
- export async function userInfo(params){
-  return await http.post('/user/info', params);
+export async function userInfo(params) {
+  return await http.post('/user/info', params)
 }
 
 /**
  * 账号登出
  */
-export async function login_out(){
+export async function login_out() {
   return await http.post('/user/login_out');
 }
 
@@ -103,7 +103,7 @@ export async function login_out(){
  * @param {Object} params.password - 密码
  * @returns
  */
-export async function register(params){
+export async function register(params) {
   return await http.post('/user/create', params);
 }
 
@@ -114,6 +114,39 @@ export async function register(params){
  * @param {string} [params.followUserId] - 指定要关注的用户的id
  * @returns
  */
- export async function toggleFollowing(params){
+export async function toggleFollowing(params) {
   return await http.post('/user/following', params);
+}
+
+/**
+ * 获取指定用户关注的人
+ * @export
+ * @param {Object} [params] - 
+ * @param {string} [params.userId] - 指定的用户id
+ * @returns
+ */
+export async function following(params) {
+  return await http.get('/user/following', { params });
+}
+
+/**
+ * 获取指定用户的粉丝
+ * @export
+ * @param {Object} [params] - 
+ * @param {string} [params.userId] - 指定的用户id
+ * @returns
+ */
+export async function fans(params) {
+  return await http.get('/user/fans', { params });
+}
+
+/**
+ * 获取指定用户的收藏的菜单
+ * @export
+ * @param {Object} [params] - 
+ * @param {string} [params.userId] - 指定的用户id
+ * @returns
+ */
+export async function collection(params) {
+  return await http.get('/user/collection', { params });
 }
