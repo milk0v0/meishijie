@@ -106,3 +106,14 @@ export async function login_out(){
 export async function register(params){
   return await http.post('/user/create', params);
 }
+
+/**
+ * toggle 关注。关注的取消关注；没关注的，要关注。
+ * @export
+ * @param {Object} [params] - 
+ * @param {string} [params.followUserId] - 指定要关注的用户的id
+ * @returns
+ */
+ export async function toggleFollowing(params){
+  return await http.post('/user/following', params);
+}

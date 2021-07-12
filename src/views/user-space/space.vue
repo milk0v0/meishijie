@@ -3,18 +3,23 @@
 		<h2>欢迎来到我的美食空间</h2>
 		<div class="user-info">
 			<div class="user-avatar">
-				<img src="" alt="" />
+				<img :src="userInfo.avatar" alt="" />
 			</div>
 			<div class="user-main">
-				<h1></h1>
+				<h1>{{ userInfo.name }}</h1>
 				<span class="info">
-					<em>加入美食杰</em>
+					<em>{{ userInfo.createdAt }}加入美食杰</em>
 					|
 					<router-link to="">编辑个人资料</router-link>
 				</span>
-				<div class="tools">
-					<!-- follow-at  no-follow-at-->
-					<a href="javascript:;" class="follow-at"> 关注 </a>
+				<div class="tools" v-if="!isOwner">
+					<a
+						href="javascript:;"
+						:class="userInfo.isFollowing ? 'no-follow-at' : 'follow-at'"
+						@click="handleToggle"
+					>
+						{{ userInfo.isFollowing ? "已关注" : "+关注" }}
+					</a>
 				</div>
 			</div>
 
@@ -22,32 +27,31 @@
 				<li>
 					<div>
 						<span>关注</span>
-						<strong>77</strong>
+						<strong>{{ userInfo.following_len }}</strong>
 					</div>
 				</li>
 				<li>
 					<div>
 						<span>粉丝</span>
-						<strong>44</strong>
+						<strong>{{ userInfo.follows_len }}</strong>
 					</div>
 				</li>
 				<li>
 					<div>
 						<span>收藏</span>
-						<strong>11</strong>
+						<strong>{{ userInfo.collections_len }}</strong>
 					</div>
 				</li>
 				<li>
 					<div>
 						<span>发布菜谱</span>
-						<strong>55</strong>
+						<strong>{{ userInfo.work_menus_len }}</strong>
 					</div>
 				</li>
 			</ul>
 		</div>
 
-		<!-- v-model="activeName" -->
-		<el-tabs class="user-nav">
+		<el-tabs class="user-nav" v-model="activeName" @tab-click="handleTab">
 			<el-tab-pane label="作品" name="works"></el-tab-pane>
 			<el-tab-pane label="粉丝" name="fans"></el-tab-pane>
 			<el-tab-pane label="关注" name="following"></el-tab-pane>
@@ -65,27 +69,57 @@
 </template>
 
 <script>
-	import { mapState } from "vuex";
+	import { userInfo, toggleFollowing } from "@/service/api";
 	export default {
 		name: "space",
-		computed: {
-			...mapState(["userInfo"]),
+		data() {
+			return {
+				userInfo: {},
+				isOwner: false,
+				activeName: "works",
+			};
 		},
-		mounted () {
-			// console.log(this.$route);
+		mounted() {
+			this.handleRoute();
+			this.activeName = this.$route.name;
 		},
 		watch: {
 			$route() {
+				this.handleRoute();
+			},
+		},
+		methods: {
+			async handleRoute() {
 				const { userId } = this.$route.query;
-				if (!userId || userId === this.userInfo.userId) {
-					console.log(111);
+				if (!userId || userId === this.$store.state.userInfo.userId) {
+					this.userInfo = this.$store.state.userInfo;
+					this.isOwner = true;
+				} else {
+					const { data } = await userInfo({ userId });
+					this.userInfo = data;
 				}
+				console.log(this.userInfo);
+			},
+			async handleToggle() {
+				const { code, data, mes } = await toggleFollowing({
+					followUserId: this.userInfo.userId,
+				});
+
+				this.userInfo = data;
+				this.$message({
+					message: mes,
+					type: code === 0 ? "success" : "warning",
+					duration: 1000,
+				});
+			},
+			handleTab() {
+				this.$router.push({ name: this.activeName, query: this.$route.query });
 			},
 		},
 	};
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 	.space {
 		h2 {
 			text-align: center;
