@@ -9,8 +9,10 @@
 				<h1>{{ userInfo.name }}</h1>
 				<span class="info">
 					<em>{{ userInfo.createdAt }}加入美食杰</em>
-					|
-					<router-link to="">编辑个人资料</router-link>
+					<template v-if="isOwner">
+						|
+						<router-link :to="{ name: 'edit' }">编辑个人资料</router-link>
+					</template>
 				</span>
 				<div class="tools" v-if="!isOwner">
 					<a
@@ -119,15 +121,14 @@
 					this.activeName = this.$route.name;
 
 					if (!userId || userId === this.$store.state.userInfo.userId) {
-						await new Promise((res) => {
-							setTimeout(() => res());
-						});
 						this.userInfo = this.$store.state.userInfo;
-						this.isOwner = true;
 					} else if (this.userInfo.userId !== userId) {
 						const { data } = await userInfo({ userId });
 						this.userInfo = data;
 					}
+
+					this.isOwner =
+						!userId || this.userInfo.userId === this.$store.state.userInfo.userId;
 
 					this.getInfo();
 				},

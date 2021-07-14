@@ -150,3 +150,27 @@ export async function fans(params) {
 export async function collection(params) {
   return await http.get('/user/collection', { params });
 }
+
+/**
+ * 上传图片
+ * @export
+ * @param {Object} [params] - 
+ * @param {string} [params.type] - product user step
+ * @returns
+ */
+export async function upload(params){
+  return await http.post('/upload', {params});
+}
+
+/**
+ * 修改用户信息
+ * @export
+ * @param {Object} [params] - 
+ * @param {string} [params.name] - product user step
+ * @param {string} [params.avatar] - product user step
+ * @param {string} [params.sign] - product user step
+ * @returns
+ */
+ export async function userEdit(params){
+  return await http.post('/user/edit', params);
+}
