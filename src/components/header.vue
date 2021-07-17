@@ -8,7 +8,7 @@
 					</el-col>
 					<el-col :span="10" :offset="2"></el-col>
 					<el-col :span="6" :offset="3" class="avatar-box" v-if="isLogin">
-						<router-link to="">
+						<router-link :to="{ name: 'space' }">
 							<el-avatar
 								style="vertical-align: middle"
 								shape="square"
@@ -16,17 +16,21 @@
 								:src="userInfo.avatar"
 							></el-avatar>
 						</router-link>
-						<router-link to="" class="user-name">{{
+						<router-link :to="{ name: 'space' }" class="user-name">{{
 							userInfo.name
 						}}</router-link>
-						<router-link to="" class="collection">发布菜谱</router-link>
+						<router-link :to="{ name: 'create' }" class="collection"
+							>发布菜谱</router-link
+						>
 						<a href="javascript:;" class="collection" @click="loginOut">退出</a>
 					</el-col>
 					<el-col :span="6" :offset="3" class="avatar-box" v-else>
-						<router-link :to="{ name: 'login' }" class="user-name"
+						<router-link
+							:to="{ name: 'login', query: { activeName: 'login' } }"
+							class="user-name"
 							>登录</router-link
 						>
-						<router-link :to="{ name: 'login' }" class="collection"
+						<router-link :to="{ name: 'login', query: { activeName: 'second' } }" class="collection"
 							>注册</router-link
 						>
 					</el-col>

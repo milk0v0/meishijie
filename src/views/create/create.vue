@@ -3,11 +3,25 @@
 		<h2>欢迎发布新菜谱，先介绍一下你的大作！</h2>
 		<div class="create-introduce">
 			<h5>标题</h5>
-			<el-input class="create-input" placeholder="请输入内容"></el-input>
+			<el-input
+				class="create-input"
+				placeholder="请输入内容"
+				v-model="backData.title"
+			></el-input>
 			<h5>属性</h5>
 			<div>
-				<el-select>
-					<el-option> </el-option>
+				<el-select
+					v-for="item in properties"
+					v-model="backData.property[item.title]"
+					:key="item.parent_type"
+					:placeholder="item.parent_name"
+				>
+					<el-option
+						v-for="option in item.list"
+						:key="option.type"
+						:label="option.name"
+						:value="option.type"
+					></el-option>
 				</el-select>
 			</div>
 			<h5>菜谱分类</h5>
@@ -66,11 +80,30 @@
 <script>
 	import Stuff from "./stuff";
 	import Upload from "./step-upload";
+	import { getProperty, getClassify } from "@/service/api";
+	console.log(getProperty, getClassify);
 	export default {
 		name: "create",
 		components: {
 			Stuff,
 			Upload,
+		},
+		async mounted() {
+			const { data } = await getProperty();
+			this.properties = data;
+			this.backData.property = data.reduce((o, item) => {
+				o[item.title] = "";
+				return o;
+			}, {});
+		},
+		data() {
+			return {
+				properties: [],
+				backData: {
+					title: "",
+					property: {},
+				},
+			};
 		},
 	};
 </script>

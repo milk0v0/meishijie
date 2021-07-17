@@ -1,6 +1,10 @@
 <template>
 	<div class="login-page">
-		<el-tabs v-model="activeName" type="card">
+		<el-tabs
+			v-model="activeName"
+			type="card"
+			@tab-click="handleTab"
+		>
 			<el-tab-pane label="登录" name="login">
 				<Login></Login>
 			</el-tab-pane>
@@ -16,14 +20,25 @@
 	import Register from "./register";
 	export default {
 		name: "login",
-		data() {
-			return {
-				activeName: "login",
-			};
-		},
 		components: {
 			Login,
-			Register
+			Register,
+		},
+		watch: {
+			'$route'() {
+				this.activeName = this.$route.query.activeName
+			}
+		},
+		data() {
+			return {
+				activeName: this.$route.query.activeName
+			}
+		},
+		methods: {
+			handleTab() {
+				if(this.activeName === this.$route.query.activeName) return
+				this.$router.push({ name: "login", query: { activeName: this.activeName } });
+			},
 		},
 	};
 </script>

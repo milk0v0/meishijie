@@ -174,3 +174,13 @@ export async function upload(params){
  export async function userEdit(params){
   return await http.post('/user/edit', params);
 }
+
+// 获取所有属性分类
+export async function getProperty(){
+  return await http.get('/menu/property');
+}
+
+// 获取所有菜谱分类
+export async function getClassify(){
+  return await http.get('/menu/classify');
+}
