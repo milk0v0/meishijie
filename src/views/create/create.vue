@@ -26,31 +26,52 @@
 			</div>
 			<h5>菜谱分类</h5>
 			<div>
-				<el-select placeholder="请选择菜谱分类">
-					<el-option-group>
-						<el-option> </el-option>
+				<el-select v-model="backData.classify" placeholder="请选择菜谱分类">
+					<el-option-group
+						v-for="group in classifies"
+						:key="group.parent_type"
+						:label="group.parent_name"
+					>
+						<el-option
+							v-for="item in group.list"
+							:key="item.type"
+							:label="item.name"
+							:value="item.type"
+						>
+						</el-option>
 					</el-option-group>
 				</el-select>
 			</div>
 			<h5>成品图 (328*440)</h5>
 			<div class="upload-img-box clearfix">
 				<div class="upload-img">
-					<upload-img></upload-img>
+					<UploadImg
+						:imgMaxWidth="328"
+						action="api/upload?type=product"
+						:image-url="backData.product_pic_url"
+						@res-url="
+							(res) => {
+								backData.product_pic_url = res.resImgUrl;
+							}
+						"
+					/>
 				</div>
 				<el-input
 					class="introduce-text"
 					type="textarea"
 					:rows="10"
 					placeholder="请输入内容"
+					v-model="backData.product_story"
 				>
 				</el-input>
 			</div>
 		</div>
 		<h2>记录所有原材料</h2>
 		<div class="create-introduce">
-			<Stuff />
+			<h5>主料</h5>
+			<Stuff v-model="backData.raw_material.main_material" />
 			<h5>辅料</h5>
-			<Stuff />
+			<Stuff v-model="backData.raw_material.accessories_material" />
 		</div>
 		<h2>开始写步骤了！能否简单易学就看你怎么写了，加油！</h2>
 		<div class="create-introduce">
@@ -79,31 +100,71 @@
 
 <script>
 	import Stuff from "./stuff";
+	import UploadImg from "@/components/upload-img";
 	import Upload from "./step-upload";
 	import { getProperty, getClassify } from "@/service/api";
-	console.log(getProperty, getClassify);
+	const backData = {
+		title: "", // 标题
+		product_pic_url: "", // 成品图URL
+		product_story: "", // 成品图故事
+		property: {
+			craft: 0, // 工艺 enum: [1,2,3,4],
+			flavor: 0, // 口味  enum: [1,2,3,4],
+			hard: 0, // 难度 enum: [1,2,3,4],
+			pepole: 0, // pepole 人数: [1,2,3,4],
+		}, // 属性
+		raw_material: {
+			// 料
+			main_material: [{ name: "", specs: "" }], // 主料
+			accessories_material: [{ name: "", specs: "" }], // 辅料
+		},
+		steps: [{ img_url: "", describe: "" }], // 步骤
+		classify: "", // 菜谱分类
+		skill: "",
+	};
+	backData;
 	export default {
 		name: "create",
 		components: {
+			UploadImg,
 			Stuff,
 			Upload,
 		},
-		async mounted() {
-			const { data } = await getProperty();
-			this.properties = data;
-			this.backData.property = data.reduce((o, item) => {
-				o[item.title] = "";
-				return o;
-			}, {});
-		},
 		data() {
+			let rawIndex = 0;
 			return {
+				classifies: [],
 				properties: [],
 				backData: {
 					title: "",
 					property: {},
+					classify: "",
+					product_pic_url: "",
+					product_story: "",
+					raw_material: {
+						main_material: new Array(3).fill(1).map(() => ({
+							name: "",
+							specs: "",
+							id: ++rawIndex,
+						})),
+						accessories_material: new Array(3).fill(1).map(() => ({
+							name: "",
+							specs: "",
+							id: ++rawIndex,
+						})),
+					},
 				},
 			};
+		},
+		async mounted() {
+			const { data: property } = await getProperty();
+			this.properties = property;
+			this.backData.property = property.reduce((o, item) => {
+				o[item.title] = "";
+				return o;
+			}, {});
+			const { data: classify } = await getClassify();
+			this.classifies = classify;
 		},
 	};
 </script>

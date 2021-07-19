@@ -33,9 +33,9 @@
 		},
 		methods: {
 			handleAvatarSuccess(res) {
-				this.$emit('res-url', {
-					resImgUrl: res.data.url
-				})
+				this.$emit("res-url", {
+					resImgUrl: res.data.url,
+				});
 			},
 			beforeAvatarUpload(file) {
 				return new Promise((res, rej) => {
@@ -44,7 +44,9 @@
 
 					img.onload = () => {
 						const isWidth =
-							img.width <= this.imgMaxWidth || img.height <= this.imgMaxWidth;
+							this.imgMaxWidth === "auto" ||
+							img.width <= this.imgMaxWidth ||
+							img.height <= this.imgMaxWidth;
 						const isJPG = file.type === "image/jpeg";
 						const isLt2M = file.size / 1024 / 1024 < this.imgMaxSize;
 
