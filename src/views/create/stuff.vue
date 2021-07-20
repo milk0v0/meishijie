@@ -1,7 +1,7 @@
 <template>
 	<div class="stuff">
 		<div class="clearfix">
-			<div class="raw-item" v-for="(item, index) in value" :key="item.id">
+			<div class="raw-item" v-for="(item, index) in value" :key="item.customeId">
 				<el-input
 					placeholder="请输入内容"
 					style="width: 200px"
@@ -55,7 +55,7 @@
 	};
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 	.delete-icon {
 		background-color: #ccc;
 		border-radius: 50%;

@@ -45,8 +45,8 @@
 					img.onload = () => {
 						const isWidth =
 							this.imgMaxWidth === "auto" ||
-							img.width <= this.imgMaxWidth ||
-							img.height <= this.imgMaxWidth;
+							(img.width <= this.imgMaxWidth &&
+							img.height <= this.imgMaxWidth);
 						const isJPG = file.type === "image/jpeg";
 						const isLt2M = file.size / 1024 / 1024 < this.imgMaxSize;
 

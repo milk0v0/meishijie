@@ -184,3 +184,13 @@ export async function getProperty(){
 export async function getClassify(){
   return await http.get('/menu/classify');
 }
+
+/**
+ * 发布菜谱
+ * @export
+ * @param {Object} params - 需要上传的数据，参考backData
+ * @returns
+ */
+export async function publish(params){
+  return await http.post('/menu/publish', params);
+}

@@ -75,12 +75,20 @@
 		</div>
 		<h2>开始写步骤了！能否简单易学就看你怎么写了，加油！</h2>
 		<div class="create-introduce">
-			<Upload />
+			<Upload
+				v-for="(item, index) in backData.steps"
+				:key="item.customeId"
+				:n="index + 1"
+				v-model="backData.steps[index]"
+				:showDelete="backData.steps.length > 1"
+				@remove="handleRemove"
+			/>
 			<el-button
 				class="eaeaea add-step-button"
 				type="primary"
 				size="medium"
 				icon="el-icon-plus"
+				@click="handleAdd"
 				>增加一步</el-button
 			>
 			<h5>烹饪小技巧</h5>
@@ -89,10 +97,16 @@
 				type="textarea"
 				:rows="8"
 				placeholder="分享下你做这道菜的过程中的心得和小技巧吧！"
+				v-model="backData.skill"
 			>
 			</el-input>
 		</div>
-		<el-button class="send" type="primary" size="medium" :icon="icon"
+		<el-button
+			class="send"
+			type="primary"
+			size="medium"
+			:icon="icon"
+			@click="handleSend"
 			>搞定，提交审核</el-button
 		>
 	</div>
@@ -102,7 +116,7 @@
 	import Stuff from "./stuff";
 	import UploadImg from "@/components/upload-img";
 	import Upload from "./step-upload";
-	import { getProperty, getClassify } from "@/service/api";
+	import { getProperty, getClassify, publish } from "@/service/api";
 	const backData = {
 		title: "", // 标题
 		product_pic_url: "", // 成品图URL
@@ -122,7 +136,69 @@
 		classify: "", // 菜谱分类
 		skill: "",
 	};
+	const mockData = {
+		title: "测测试试",
+		property: {
+			craft: "1-1",
+			flavor: "2-2",
+			hard: "3-4",
+			people: "4-2",
+		},
+		classify: "1-1",
+		product_pic_url:
+			"http://127.0.0.1:7001\\static\\upload\\product\\210x1571626799143455.jpg",
+		product_story: "哈哈哈哈哈哈哈",
+		raw_material: {
+			main_material: [
+				{
+					name: "1",
+					specs: "1",
+				},
+				{
+					name: "2",
+					specs: "2",
+				},
+				{
+					name: "3",
+					specs: "3",
+				},
+			],
+			accessories_material: [
+				{
+					name: "1",
+					specs: "1",
+				},
+				{
+					name: "2",
+					specs: "2",
+				},
+				{
+					name: "3",
+					specs: "3",
+				},
+			],
+		},
+		steps: [
+			{
+				img_url:
+					"http://127.0.0.1:7001\\static\\upload\\step\\210x2101626799166108.jpg",
+				describe: "测试测试测试111",
+			},
+			{
+				img_url:
+					"http://127.0.0.1:7001\\static\\upload\\step\\210x2101626799175323.jpg",
+				describe: "测试测试测试222",
+			},
+			{
+				img_url:
+					"http://127.0.0.1:7001\\static\\upload\\step\\210x2101626799182777.jpg",
+				describe: "测试测试测试333",
+			},
+		],
+		skill: "测测测测测测测测测测测试试试试试试试试试试试",
+	};
 	backData;
+	mockData;
 	export default {
 		name: "create",
 		components: {
@@ -133,6 +209,7 @@
 		data() {
 			let rawIndex = 0;
 			return {
+				icon: "",
 				classifies: [],
 				properties: [],
 				backData: {
@@ -142,17 +219,17 @@
 					product_pic_url: "",
 					product_story: "",
 					raw_material: {
-						main_material: new Array(3).fill(1).map(() => ({
-							name: "",
-							specs: "",
-							id: ++rawIndex,
-						})),
-						accessories_material: new Array(3).fill(1).map(() => ({
-							name: "",
-							specs: "",
-							id: ++rawIndex,
-						})),
+						main_material: new Array(3)
+							.fill(1)
+							.map(() => ({ name: "", specs: "", customeId: ++rawIndex })),
+						accessories_material: new Array(3)
+							.fill(1)
+							.map(() => ({ name: "", specs: "", customeId: ++rawIndex })),
 					},
+					steps: new Array(3)
+						.fill(1)
+						.map(() => ({ img_url: "", describe: "", customeId: ++rawIndex })),
+					skill: "",
 				},
 			};
 		},
@@ -165,6 +242,39 @@
 			}, {});
 			const { data: classify } = await getClassify();
 			this.classifies = classify;
+		},
+		methods: {
+			handleAdd() {
+				this.backData.steps.push({
+					img_url: "",
+					describe: "",
+					customeId: Date.now(),
+				});
+			},
+			handleRemove(index) {
+				this.backData.steps.splice(index, 1);
+			},
+			async handleSend() {
+				const str = JSON.stringify(this.backData);
+				if (str.includes(`""`)) {
+					return this.$message.error("请填写完整");
+				}
+				let param = JSON.parse(str);
+				// param = mockData;
+				for (const key in param.steps) {
+					delete param.steps[key].customeId;
+				}
+				for (const key in param.raw_material) {
+					for (const i in param.raw_material[key]) {
+						delete param.raw_material[key][i].customeId;
+					}
+				}
+				const res = await publish(param);
+				if (res.code === 0) {
+					this.$message.success(res.mes);
+					this.$router.push({ name: "space" });
+				}
+			},
 		},
 	};
 </script>
