@@ -117,7 +117,6 @@ const router = new VueRouter({
 router.beforeEach(async (to, from, next) => {
   const token = localStorage.getItem('token');
   if (to.matched.some(item => item.meta.login) && (!from.matched.length || from.matched[0].path !== to.matched[0].path)) {
-    console.log('路由守卫');
     if (token) {
       const res = await userInfo();
       if (res.error === 400) {
