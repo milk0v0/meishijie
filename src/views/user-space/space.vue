@@ -68,6 +68,7 @@
 			<router-view
 				:info="otherInfo[activeName]"
 				:activeName="activeName"
+				v-if="!infoLoad[activeName]"
 			></router-view>
 		</div>
 	</div>
@@ -109,46 +110,61 @@
 				isOwner: false,
 				activeName: "works",
 				otherInfo: {},
+				infoLoad: {},
 			};
 		},
 		watch: {
-			$route: {
-				async handler() {
-					let { userId } = this.$route.query;
-					!userId && (userId = this.$store.state.userInfo.userId);
-
-					this.userInfo.userId !== userId && (this.otherInfo = {});
-
-					this.activeName = this.$route.name;
-
-					if (userId === this.$store.state.userInfo.userId) {
-						this.userInfo = this.$store.state.userInfo;
-					} else if (this.userInfo.userId !== userId) {
-						const { data } = await userInfo({ userId });
-						this.userInfo = data;
-					}
-
-					this.isOwner =
-						!userId || this.userInfo.userId === this.$store.state.userInfo.userId;
-
-					this.getInfo();
-				},
-				immediate: true,
-			},
+			$route() {
+				this.handleRouter();
+			}
+		},
+		mounted () {
+				this.handleRouter();
 		},
 		methods: {
 			getInfo() {
 				if (!this.otherInfo[this.activeName]) {
 					this.$set(this.otherInfo, this.activeName, []);
+					this.$set(this.infoLoad, this.activeName, true);
 
 					(async (activeName) => {
+						const handleLoad = this.$loading({
+							lock: true,
+							text: "Loading",
+							target: ".user-info-show",
+						});
 						const { list } = await getOtherInfo[activeName]({
 							userId: this.userInfo.userId,
 						});
 
 						this.$set(this.otherInfo, activeName, list);
+						this.$set(this.infoLoad, activeName, false);
+						handleLoad.close();
 					})(this.activeName);
 				}
+			},
+			async handleRouter() {
+				let { userId } = this.$route.query;
+				!userId && (userId = this.$store.state.userInfo.userId);
+
+				if (this.userInfo.userId !== userId) {
+					this.otherInfo = {};
+					this.infoLoad = {};
+				}
+
+				this.activeName = this.$route.name;
+
+				if (userId === this.$store.state.userInfo.userId) {
+					this.userInfo = this.$store.state.userInfo;
+				} else if (this.userInfo.userId !== userId) {
+					const { data } = await userInfo({ userId });
+					this.userInfo = data;
+				}
+
+				this.isOwner =
+					!userId || this.userInfo.userId === this.$store.state.userInfo.userId;
+
+				this.getInfo();
 			},
 			async handleToggle() {
 				const { code, data, mes } = await toggleFollowing({
