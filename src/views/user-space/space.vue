@@ -114,13 +114,14 @@
 		watch: {
 			$route: {
 				async handler() {
-					const { userId } = this.$route.query;
+					let { userId } = this.$route.query;
+					!userId && (userId = this.$store.state.userInfo.userId);
 
 					this.userInfo.userId !== userId && (this.otherInfo = {});
 
 					this.activeName = this.$route.name;
 
-					if (!userId || userId === this.$store.state.userInfo.userId) {
+					if (userId === this.$store.state.userInfo.userId) {
 						this.userInfo = this.$store.state.userInfo;
 					} else if (this.userInfo.userId !== userId) {
 						const { data } = await userInfo({ userId });
