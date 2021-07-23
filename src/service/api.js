@@ -194,3 +194,14 @@ export async function getClassify(){
 export async function publish(params){
   return await http.post('/menu/publish', params);
 }
+
+/**
+ * 根据菜单id，拿到菜谱的详细信息
+ * @export
+ * @param {Object} [params] - 
+ * @param {string} [params.menuId] - 指定菜单的id
+ * @returns
+ */
+export async function menuInfo(params){
+  return await http.get('/menu/menuInfo', {params});
+}
