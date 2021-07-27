@@ -5,7 +5,13 @@
 			<div class="detail-title clearfix">
 				<h1 class="title">{{ info.title }}</h1>
 				<div class="detail-collection">
-					<a class="collection-at"> 收藏 </a>
+					<a
+						:class="info.isCollection ? 'no-collection-at' : 'collection-at'"
+						v-if="!isOnwer"
+						@click="handleCollection"
+					>
+						{{ info.isCollection ? "已收藏" : "收藏" }}
+					</a>
 				</div>
 			</div>
 
@@ -46,12 +52,30 @@
 </template>
 
 <script>
+	import { toggleCollection } from "@/service/api";
 	export default {
 		name: "detailHeader",
 		props: {
 			info: {
 				type: Object,
 				default: () => {},
+			},
+		},
+		computed: {
+			isOnwer() {
+				return this.info.userId === this.$store.state.userInfo.userId;
+			},
+		},
+		methods: {
+			async handleCollection() {
+				const res = await toggleCollection({ menuId: this.info.menuId });
+
+				if (res.code === 0) {
+					this.$message.success(res.mes);
+					this.info.isCollection = res.data.isCollection;
+				} else {
+					this.$message.error(res.mes);
+				}
 			},
 		},
 	};

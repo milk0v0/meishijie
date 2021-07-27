@@ -205,3 +205,14 @@ export async function publish(params){
 export async function menuInfo(params){
   return await http.get('/menu/menuInfo', {params});
 }
+
+/**
+ * toggle 收藏。收藏的取消收藏；没收藏的，要收藏。
+ * @export
+ * @param {Object} [params] - 
+ * @param {string} [params.menuId] - 指定要收藏的菜单的id
+ * @returns
+ */
+export async function toggleCollection(params){
+  return await http.post('/user/collection', params);
+}

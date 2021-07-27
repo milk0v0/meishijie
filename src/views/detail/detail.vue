@@ -22,6 +22,11 @@
 			return {
 				menuInfo: {
 					userInfo: {},
+					raw_material: {
+						main_material: [],
+						accessories_material: []
+					},
+					steps: []
 				},
 			};
 		},

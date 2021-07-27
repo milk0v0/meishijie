@@ -1,39 +1,59 @@
 <template>
 	<div class="detail-content">
 		<div class="detail-materials">
-			<p class=""><strong>“</strong>这道菜的描述<strong>”</strong></p>
+			<p class="">
+				<strong>“</strong>{{ info.product_story }}<strong>”</strong>
+			</p>
 			<h2>用料</h2>
-			<div class="detail-materials-box clearfix">
+			<div
+				class="detail-materials-box clearfix"
+				v-if="info.raw_material.main_material.length"
+			>
 				<h3>主料</h3>
 				<ul>
-					<li class="">
-						食材
-						<span>适量</span>
+					<li
+						class=""
+						v-for="item in info.raw_material.main_material"
+						:key="item._id"
+					>
+						{{ item.name }}
+						<span>{{ item.specs }}</span>
 					</li>
 				</ul>
 			</div>
-			<div class="detail-materials-box clearfix">
+			<div
+				class="detail-materials-box clearfix"
+				v-if="info.raw_material.accessories_material.length"
+			>
 				<h3>辅料</h3>
 				<ul>
-					<li class="">
-						盐
-						<span>适量</span>
+					<li
+						class=""
+						v-for="item in info.raw_material.accessories_material"
+						:key="item._id"
+					>
+						{{ item.name }}
+						<span>{{ item.specs }}</span>
 					</li>
 				</ul>
 			</div>
 		</div>
 		<div class="detail-explain">
-			<h2>菜的做法</h2>
-			<section class="detail-section clearfix">
-				<em class="detail-number">1.</em>
+			<h2>{{ info.title }}</h2>
+			<section
+				class="detail-section clearfix"
+				v-for="(item, index) in info.steps"
+				:key="item._id"
+			>
+				<em class="detail-number">{{ index + 1 }}.</em>
 				<div class="detail-explain-desc">
-					<p>步骤1</p>
-					<img class="conimg" src="" alt="" />
+					<p>{{item.describe}}</p>
+					<img class="conimg" v-if="item.img_url" :src="item.img_url" alt="" />
 				</div>
 			</section>
 			<div class="skill">
 				<h2>烹饪技巧</h2>
-				<p>先这样，然后再这样，最后这样，出锅！妙啊~</p>
+				<p>{{info.skill}}</p>
 			</div>
 		</div>
 	</div>
@@ -42,6 +62,15 @@
 <script>
 	export default {
 		name: "DetailContent",
+		props: {
+			info: {
+				type: Object,
+				default: () => {},
+			},
+		},
+		mounted() {
+			console.log(this.info);
+		},
 	};
 </script>
 
