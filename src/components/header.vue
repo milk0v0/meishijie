@@ -4,7 +4,7 @@
 			<div class="header_c">
 				<el-row type="flex" justify="start" align="middle">
 					<el-col :span="6">
-						<a href="" class="logo"></a>
+						<a href="/" class="logo"></a>
 					</el-col>
 					<el-col :span="10" :offset="2"></el-col>
 					<el-col :span="6" :offset="3" class="avatar-box" v-if="isLogin">

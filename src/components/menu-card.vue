@@ -8,7 +8,7 @@
 			}"
 		>
 			<el-card :body-style="{ padding: '0px' }">
-				<router-link :to="{ name: 'detail', query: { menuId: item.menuId } }">
+				<router-link :to="{ name: 'detail', query: { menuId: item._id } }">
 					<img :src="item.product_pic_url" class="image" />
 					<div class="menu-card-detail">
 						<strong>{{ item.title }}</strong>
@@ -39,6 +39,14 @@
 				type: Array,
 				default: () => [],
 			},
+		},
+		watch: {
+			info:{
+				handler() {
+					console.log(this.info);
+				},
+				immediate: true
+			}
 		},
 	};
 </script>
