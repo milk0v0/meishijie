@@ -2,7 +2,7 @@
 	<div class="menu-detail">
 		<DetailHeader :info="menuInfo" />
 		<DetailContent :info="menuInfo" />
-		<Comment></Comment>
+		<Comment :info="menuInfo"></Comment>
 	</div>
 </template>
 

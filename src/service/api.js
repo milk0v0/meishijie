@@ -216,3 +216,26 @@ export async function menuInfo(params){
 export async function toggleCollection(params){
   return await http.post('/user/collection', params);
 }
+
+/**
+ * 获取菜谱评论信息
+ * @export
+ * @param {Object} [params] - 
+ * @param {string} [params.menuId] - 指定菜谱的id
+ * @returns
+ */
+ export async function getComments(params){
+  return await http.get('/menu/comment', {params});
+}
+
+/**
+ * 提交菜谱评论信息
+ * @export
+ * @param {Object} [params] - 
+ * @param {string} [params.menuId] - 指定评论的菜谱id
+ * @param {string} [params.commentText] - 评论内容
+ * @returns
+ */
+ export async function postComment(params){
+  return await http.post('/menu/comment', params);
+}

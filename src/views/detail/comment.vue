@@ -1,41 +1,57 @@
 <template>
 	<div class="comment-box">
-		<h2>吃货们的讨论</h2>
+		<h2>{{ info.title }}的讨论</h2>
 		<div class="comment-text">
-			<a href="javascript:;" class="useravatar">
-				<img src="" />
-			</a>
-			<div>
-				请先登录后，再评论<router-link to="">登录</router-link>
-			</div>
-
-			<div class="comment-right">
-				<el-input type="textarea" :rows="5" :cols="50" placeholder="请输入内容">
-				</el-input>
-				<div class="comment-button">
-					<el-button class="send-comment" type="primary" size="medium"
-						>提交</el-button
+			<template v-if="this.isLogin">
+				<router-link :to="{ name: 'space' }" class="useravatar">
+					<img :src="userInfo.avatar" />
+				</router-link>
+				<div class="comment-right">
+					<el-input
+						type="textarea"
+						:rows="5"
+						:cols="50"
+						placeholder="请输入内容"
+						v-model="commentText"
 					>
+					</el-input>
+					<div class="comment-button">
+						<el-button
+							class="send-comment"
+							type="primary"
+							size="medium"
+							@click="handleSend"
+							>提交</el-button
+						>
+					</div>
 				</div>
+			</template>
+			<div v-else>
+				请先
+				<router-link
+					:to="{ name: 'login', query: { activeName: 'login' } }"
+					:style="{
+						color: 'blue',
+					}"
+					>登录</router-link
+				>
+				后，再评论
 			</div>
 		</div>
 		<div class="comment-list-box">
 			<ul class="comment-list">
-				<li>
-					<a
-						target="_blank"
-						href="https://i.meishi.cc/cook.php?id=14026963"
+				<li v-for="item in comments" :key="item.commentId">
+					<router-link
+						:to="{ name: 'space', query: { userId: item.userId } }"
 						class="avatar"
 					>
-					</a>
-					<router-link to="" class="avatar">
-						<img src="" />
-						<h5></h5>
+						<img :src="item.userInfo.avatar" />
+						<h5>{{ item.userInfo.name }}</h5>
 					</router-link>
 					<div class="comment-detail">
-						<p class="p1"></p>
+						<p class="p1">{{ item.commentText }}</p>
 						<div class="info clearfix">
-							<span style="float: left"></span>
+							<span style="float: left">{{ item.createdAt }}</span>
 						</div>
 					</div>
 				</li>
@@ -45,8 +61,53 @@
 </template>
 
 <script>
+	import { getComments, postComment } from "@/service/api";
+	import { mapState, mapGetters } from "vuex";
 	export default {
 		name: "comment",
+		props: {
+			info: {
+				type: Object,
+				default: () => {},
+			},
+		},
+		data() {
+			return {
+				comments: [],
+				commentText: "",
+			};
+		},
+		computed: {
+			...mapState(["userInfo"]),
+			...mapGetters(["isLogin"]),
+		},
+		async mounted() {
+			if (!this.$route.query.menuId) return;
+			const res = await getComments({ menuId: this.$route.query.menuId });
+
+			if (res.ec === 200) {
+				this.comments = res.data.comments;
+			} else {
+				this.$message.error(res.mes);
+			}
+		},
+		methods: {
+			async handleSend() {
+				const res = await postComment({
+					menuId: this.info.menuId,
+					commentText: this.commentText,
+				});
+
+				if (res.ec === 200) {
+					this.$message.success(res.mes);
+					this.comments.unshift(res.data.comments);
+
+					this.commentText = "";
+				} else {
+					this.$message.error(res.mes);
+				}
+			},
+		},
 	};
 </script>
 

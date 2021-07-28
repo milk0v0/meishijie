@@ -53,6 +53,7 @@
 
 <script>
 	import { toggleCollection } from "@/service/api";
+	import { mapGetters } from "vuex";
 	export default {
 		name: "detailHeader",
 		props: {
@@ -65,9 +66,11 @@
 			isOnwer() {
 				return this.info.userId === this.$store.state.userInfo.userId;
 			},
+			...mapGetters(["isLogin"]),
 		},
 		methods: {
 			async handleCollection() {
+				if (!this.isLogin) return this.$message.warning("请先登录，再收藏");
 				const res = await toggleCollection({ menuId: this.info.menuId });
 
 				if (res.code === 0) {
