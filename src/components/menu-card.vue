@@ -39,15 +39,7 @@
 				type: Array,
 				default: () => [],
 			},
-		},
-		watch: {
-			info:{
-				handler() {
-					console.log(this.info);
-				},
-				immediate: true
-			}
-		},
+		}
 	};
 </script>
 

@@ -68,9 +68,6 @@
 				default: () => {},
 			},
 		},
-		mounted() {
-			console.log(this.info);
-		},
 	};
 </script>
 
