@@ -3,7 +3,7 @@
 		<el-col
 			v-for="item in info"
 			:key="item._id"
-			:style="{
+			:style="marginLeft && {
 				'margin-left': marginLeft + 'px',
 			}"
 		>
